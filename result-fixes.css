@@ -1,0 +1,37 @@
+.combination-inner>h1 {
+  margin: 0 0 34px;
+  color: var(--wine);
+  font-family: Prata, Georgia, serif;
+  font-size: clamp(2rem, 5vw, 4.8rem);
+  font-weight: 400;
+  line-height: 1.12;
+}
+.combination-block { margin-top: 40px; }
+.combination-block h2 {
+  margin: 0 0 18px;
+  color: var(--wine);
+  font-family: Prata, Georgia, serif;
+  font-size: clamp(1.45rem, 3vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1.22;
+}
+.combination-block p,
+.combination-block li {
+  margin: 0 0 14px;
+  font-size: clamp(1rem, 1.6vw, 1.12rem);
+  line-height: 1.58;
+}
+.combination-block strong { font-weight: 700; }
+.combination-block ul { margin: 0 0 18px; padding-left: 1.25em; }
+.combination-block th,
+.combination-block td { line-height: 1.5; }
+.combination-block th { font-weight: 700; }
+.combination-block td:first-child { width: 25%; color: var(--wine); font-weight: 700; }
+.download-card h2 { margin-top: 0; line-height: 1.15; }
+.download-card p { margin: 0 0 22px; line-height: 1.55; }
+.download-card > .button { display: inline-flex; }
+@media (max-width: 700px) {
+  .combination-block { margin-top: 32px; }
+  .combination-block td:first-child { width: 100%; }
+  .download-card > .button { width: 100%; }
+}
