@@ -30,8 +30,57 @@
 .download-card h2 { margin-top: 0; line-height: 1.15; }
 .download-card p { margin: 0 0 22px; line-height: 1.55; }
 .download-card > .button { display: inline-flex; }
+.results .ranking-section,
+.results .meaning-section,
+.results .combination-section,
+.results .download-stack,
+.results footer { box-sizing: border-box; }
+.results .ranking-section { padding-bottom: clamp(40px, 7vw, 82px); }
+.results .ranking-heading p,
+.results .meaning-section p,
+.results .combination-block p,
+.results .combination-block li,
+.results .download-card p,
+.results footer p { line-height: 1.55; }
+.results .ranking-list li { line-height: 1.35; }
+.results .ranking-list strong,
+.results .ranking-score { font-size: .95rem; }
+.results .ranking-score small { font-size: .8rem; }
+.results .meaning-grid article p { margin: 0 0 10px; }
+.results .meaning-grid article p:last-child { margin-bottom: 0; }
+.result-download-button {
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: #fff;
+  color: #751d2a;
+  font-size: .95rem;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.result-download-button:hover,
+.result-download-button:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.24);
+  outline: 3px solid rgba(255,255,255,.45);
+  outline-offset: 3px;
+}
 @media (max-width: 700px) {
   .combination-block { margin-top: 32px; }
   .combination-block td:first-child { width: 100%; }
   .download-card > .button { width: 100%; }
+  .results .ranking-list strong,
+  .results .ranking-score { font-size: .86rem; }
+  .results .ranking-score small { font-size: .72rem; }
+  .result-download-button { width: 100%; }
 }
