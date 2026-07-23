@@ -10,7 +10,7 @@
   opacity: 1 !important;
   visibility: visible !important;
   font-family: Prata, Georgia, serif;
-  font-size: clamp(2rem, 5vw, 4.8rem);
+  font-size: clamp(1.5rem, 2.6vw, 2.35rem);
   font-weight: 400;
   line-height: 1.12;
   box-decoration-break: clone;
@@ -29,7 +29,7 @@
   opacity: 1 !important;
   visibility: visible !important;
   font-family: Prata, Georgia, serif;
-  font-size: clamp(1.45rem, 3vw, 2.6rem);
+  font-size: clamp(1.5rem, 2.6vw, 2.35rem);
   font-weight: 400;
   line-height: 1.22;
   box-decoration-break: clone;
@@ -49,6 +49,36 @@
   line-height: 1.16;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+}
+.results .meaning-section > h2,
+.results .meaning-grid h3 {
+  display: table;
+  max-width: 100%;
+  padding: 10px 16px 11px;
+  background: #751d2a !important;
+  background-color: #751d2a !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  font-family: Prata, Georgia, serif;
+  font-size: clamp(1.5rem, 2.6vw, 2.35rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: normal;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.results .meaning-section > h2 {
+  margin-bottom: 28px;
+}
+.results .meaning-grid h3 {
+  margin: 0 0 18px;
+}
+.results .ranking-heading h2 {
+  font-family: Prata, Georgia, serif;
+  font-size: clamp(1.5rem, 2.6vw, 2.35rem);
+  font-weight: 400;
 }
 .results .ranking-heading {
   margin-bottom: 22px;
@@ -152,12 +182,12 @@
 @media (max-width: 700px) {
   .combination-inner > h1 {
     padding: 10px 13px 12px;
-    font-size: clamp(2rem, 11vw, 3.25rem);
-    line-height: 1.12;
+    font-size: clamp(1.35rem, 6.2vw, 1.8rem);
+    line-height: 1.18;
   }
   .results .ranking-heading h2 {
     padding: 9px 13px 10px;
-    font-size: clamp(1.75rem, 9vw, 2.45rem);
+    font-size: clamp(1.35rem, 6.2vw, 1.8rem);
     line-height: 1.18;
   }
   .results .ranking-heading {
@@ -174,8 +204,14 @@
   .combination-block { margin-top: 32px; }
   .combination-block h2 {
     padding: 9px 13px 10px;
-    font-size: clamp(1.28rem, 6vw, 1.65rem);
-    line-height: 1.25;
+    font-size: clamp(1.35rem, 6.2vw, 1.8rem);
+    line-height: 1.18;
+  }
+  .results .meaning-section > h2,
+  .results .meaning-grid h3 {
+    padding: 9px 13px 10px;
+    font-size: clamp(1.35rem, 6.2vw, 1.8rem);
+    line-height: 1.18;
   }
   .combination-block td:first-child { width: 100%; }
   .combination-recommendations {
@@ -229,4 +265,178 @@
   .results .ranking-score { font-size: .86rem; }
   .results .ranking-score small { font-size: .72rem; }
   .result-download-button { width: 100%; }
+}
+
+/* Recommendations use the same compact card language on every screen. */
+.combination-recommendations {
+  margin-top: 18px;
+  overflow: visible;
+}
+.combination-recommendations table,
+.combination-recommendations tbody {
+  display: block;
+  width: 100%;
+  background: transparent;
+}
+.combination-recommendations tr:first-child {
+  display: none;
+}
+.combination-recommendations tr:not(:first-child) {
+  display: block;
+  margin: 0 0 10px;
+  padding: 15px 18px;
+  border: 1px solid rgba(23, 21, 21, .16);
+  background: #fffaf2;
+}
+.combination-recommendations td,
+.combination-recommendations td:first-child {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0 !important;
+}
+.combination-recommendations td:first-child {
+  margin: 0 0 6px;
+  color: #751d2a;
+  font-family: Prata, Georgia, serif;
+  font-size: 1.08rem;
+  font-weight: 400;
+  line-height: 1.28;
+}
+.combination-recommendations td:nth-child(2) {
+  font-size: 1rem;
+  line-height: 1.48;
+}
+.combination-recommendations td:first-child::before,
+.combination-recommendations td:nth-child(2)::before {
+  display: none !important;
+  content: none !important;
+}
+@media (max-width: 700px) {
+  .combination-recommendations {
+    margin-top: 16px;
+  }
+  .combination-recommendations tr:not(:first-child) {
+    margin-bottom: 8px;
+    padding: 13px 14px;
+    border: 1px solid rgba(23, 21, 21, .16);
+    background: #fffaf2;
+  }
+  .combination-recommendations tr:nth-child(2) {
+    padding-top: 13px;
+  }
+  .combination-recommendations td:first-child {
+    margin-bottom: 5px;
+    font-size: 1.05rem;
+  }
+  .combination-recommendations td:nth-child(2) {
+    font-size: .96rem;
+    line-height: 1.46;
+  }
+}
+
+/* One reading rhythm for the whole result page. */
+.results .ranking-section,
+.results .meaning-section,
+.results .combination-section,
+.results .result-profiles,
+.results .download-stack {
+  padding-top: 38px !important;
+  padding-bottom: 38px !important;
+}
+.results .ranking-section,
+.results .meaning-section,
+.results .combination-section,
+.results .download-stack {
+  padding-right: clamp(20px, 5vw, 64px) !important;
+  padding-left: clamp(20px, 5vw, 64px) !important;
+}
+.results .ranking-heading {
+  margin-bottom: 18px;
+}
+.results .ranking-heading h2,
+.results .meaning-section > h2,
+.results .combination-inner > h1 {
+  margin-bottom: 20px;
+}
+.results .meaning-grid {
+  gap: 12px;
+  margin-top: 0;
+}
+.results .meaning-grid article {
+  padding: 20px 22px;
+}
+.results .meaning-grid h3 {
+  margin-bottom: 12px;
+}
+.results .combination-block {
+  margin-top: 25px;
+}
+.results .combination-inner > p:not(.eyebrow),
+.results .combination-block p,
+.results .combination-block li {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  line-height: 1.52;
+}
+.results .combination-block ul {
+  margin-bottom: 14px;
+}
+.results .download-stack {
+  gap: 12px;
+}
+.results .download-card {
+  padding: 24px 26px;
+}
+.results .download-card h2 {
+  margin-bottom: 8px;
+  font-size: clamp(1.5rem, 2.6vw, 2.35rem);
+}
+.results .download-card p {
+  margin-bottom: 14px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.results .download-actions {
+  margin-top: 12px;
+}
+.results footer {
+  gap: 24px;
+  padding: 30px clamp(20px, 5vw, 64px);
+}
+.results footer p {
+  margin-bottom: 0;
+  font-size: .94rem;
+  line-height: 1.5;
+}
+@media (max-width: 700px) {
+  .results .ranking-section,
+  .results .meaning-section,
+  .results .combination-section,
+  .results .result-profiles,
+  .results .download-stack {
+    padding-top: 26px !important;
+    padding-bottom: 26px !important;
+  }
+  .results .ranking-section,
+  .results .meaning-section,
+  .results .combination-section,
+  .results .download-stack {
+    padding-right: 16px !important;
+    padding-left: 16px !important;
+  }
+  .results .meaning-grid article {
+    padding: 16px;
+  }
+  .results .combination-block {
+    margin-top: 21px;
+  }
+  .results .download-card {
+    padding: 20px 18px;
+  }
+  .results footer {
+    display: grid;
+    gap: 18px;
+    padding: 24px 16px;
+  }
 }
