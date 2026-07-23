@@ -342,6 +342,19 @@
   margin-left: auto;
 }
 
+/* v24: align result copy and headings to the shared reading column. */
+.results .meaning-section > h2 {
+  width: min(850px, 100%);
+}
+.results .meaning-grid article > p {
+  margin-left: 0;
+}
+@media (max-width: 700px) {
+  .results .meaning-grid article > p {
+    margin-left: 0;
+  }
+}
+
 /* v21: lead form and email delivery block. */
 .cover-photo img {
   filter: saturate(.8) brightness(.72);

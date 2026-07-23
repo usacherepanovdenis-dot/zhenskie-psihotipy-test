@@ -46,7 +46,7 @@ renderResults=function(){
     if(confirm("Начать тест заново? Текущий результат будет сброшен.")){
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(STORAGE_KEY+"_tie");
-      participant={name:"",phone:"",email:"",personalConsent:true,mailingConsent:true};
+      participant={name:"",phone:"",email:"",personalConsent:false,mailingConsent:false};
       tieState=null;
       resolvedRanking=null;
       choices=data.questions.map(()=>({primary:null,secondary:null}));
