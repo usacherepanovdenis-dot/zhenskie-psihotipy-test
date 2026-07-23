@@ -23,7 +23,38 @@ function formatted(value){
   return text;
 }
 function combo(r){let open=false;return `<section class="combination-section"><div class="combination-inner"><p class="eyebrow">Твоя персональная интерпретация</p><h1>${esc(r.title)}</h1>${r.blocks.map(b=>{if(b.type==="h2"||b.type==="h3"){let x=(open?"</section>":"")+`<section class="combination-block"><h2>${formatted(b.text)}</h2>`;open=true;return x}if(b.type==="p")return `<p>${formatted(b.text)}</p>`;if(b.type==="list")return `<ul>${b.items.map(x=>`<li>${formatted(x)}</li>`).join("")}</ul>`;if(b.type==="table")return `<div class="responsive-table combination-recommendations"><table>${b.rows.map((row,i)=>`<tr>${row.map(c=>i?`<td>${formatted(c)}</td>`:`<th>${formatted(c)}</th>`).join("")}</tr>`).join("")}</table></div>`;return""}).join("")}${open?"</section>":""}</div></section>`}
-renderResults=function(){let rnk=resolvedRanking||base(),a=rnk[0],b=rnk[1],r=PERSONAL_RESULTS[a.profile.id+"__"+b.profile.id];app.className="results";app.innerHTML=`${rankingTable(rnk)}${meaningBlock()}${combo(r)}<section class="download-stack"><article class="download-card"><h2>Твой результат</h2><p>Персональная интерпретация сочетания «${esc(r.title)}».</p><a class="result-download-button personal-download" href="${r.pdf}" download>Скачать PDF</a></article><article class="download-card general"><h2>Описание всех психотипов</h2><p>Общий материал обо всех восьми психотипах.</p><a class="result-download-button" href="psychotypes_A4.pdf" download="Описание всех психотипов.pdf">Скачать PDF</a></article></section><footer><p>${esc(data.disclaimer)}</p><button class="button secondary" data-action="restart">Пройти тест заново</button></footer>`;bindAction("restart",()=>{if(confirm("Начать тест заново? Текущий результат будет сброшен.")){localStorage.removeItem(STORAGE_KEY);localStorage.removeItem(STORAGE_KEY+"_tie");tieState=null;resolvedRanking=null;choices=data.questions.map(()=>({primary:null,secondary:null}));questionIndex=0;go("instructions")}})};
+renderResults=function(){
+  let rnk=resolvedRanking||base(),a=rnk[0],b=rnk[1],r=PERSONAL_RESULTS[a.profile.id+"__"+b.profile.id];
+  app.className="results";
+  app.innerHTML=`${rankingTable(rnk)}${meaningBlock()}${combo(r)}<section class="email-result-card"><p class="eyebrow">Результаты готовы</p><h2>Мы отправили результаты твоего теста на почту</h2><p>В письме — твои индивидуальные результаты и подарок: файл с описанием каждого психотипа. Проверь почту и папку «Спам».</p><p>Если письмо не пришло, напиши адрес ещё раз и нажми «Отправить».</p><form class="resend-form" novalidate><label for="result-email">Электронная почта</label><div class="resend-row"><input id="result-email" name="email" type="email" autocomplete="email" inputmode="email" value="${esc(participant.email)}" required><button class="button primary" type="submit">Отправить</button></div><p class="resend-status" aria-live="polite"></p></form><p class="technical-help">Если возникли технические неполадки, обратитесь на почту: <a href="mailto:usacherepanovdenis@gmail.com">usacherepanovdenis@gmail.com</a></p></section><footer><p>${esc(data.disclaimer)}</p><button class="button secondary" data-action="restart">Пройти тест заново</button></footer>`;
+  const resendForm=document.querySelector(".resend-form");
+  resendForm.addEventListener("submit",event=>{
+    event.preventDefault();
+    const email=String(new FormData(resendForm).get("email")||"").trim();
+    const status=resendForm.querySelector(".resend-status");
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      status.textContent="Проверь адрес электронной почты.";
+      status.className="resend-status is-error";
+      return;
+    }
+    participant.email=email;
+    save();
+    status.textContent="Адрес сохранён. Отправка заработает после подключения почтового сервиса.";
+    status.className="resend-status is-success";
+  });
+  bindAction("restart",()=>{
+    if(confirm("Начать тест заново? Текущий результат будет сброшен.")){
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY+"_tie");
+      participant={name:"",phone:"",email:"",personalConsent:true,mailingConsent:true};
+      tieState=null;
+      resolvedRanking=null;
+      choices=data.questions.map(()=>({primary:null,secondary:null}));
+      questionIndex=0;
+      go("intro");
+    }
+  });
+};
 try{let x=JSON.parse(localStorage.getItem(STORAGE_KEY+"_tie"));if(x){tieState=x.tieState;if(x.ids){let by=Object.fromEntries(base().map(y=>[y.profile.id,y]));resolvedRanking=x.ids.map(id=>by[id]).filter(Boolean)}}}catch{}
 function pdfUrl(r){if(r._url)return r._url;let s=atob(r.pdfData),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return r._url=URL.createObjectURL(new Blob([a],{type:"application/pdf"}))}
 const renderWithPdf=renderResults;renderResults=function(){renderWithPdf();let rnk=resolvedRanking||base(),r=PERSONAL_RESULTS[rnk[0].profile.id+"__"+rnk[1].profile.id],link=document.querySelector(".personal-download");if(link){link.href=pdfUrl(r);link.download=r.title+".pdf"}}
