@@ -1,10 +1,20 @@
 .combination-inner>h1 {
+  display: table;
+  max-width: 100%;
   margin: 0 0 34px;
-  color: var(--wine);
+  padding: 12px 18px 15px;
+  background: #751d2a !important;
+  background-color: #751d2a !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   font-family: Prata, Georgia, serif;
   font-size: clamp(2rem, 5vw, 4.8rem);
   font-weight: 400;
   line-height: 1.12;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 .combination-block { margin-top: 40px; }
 .combination-block h2 {
@@ -12,14 +22,55 @@
   max-width: 100%;
   margin: 0 0 18px;
   padding: 10px 16px 11px;
-  background: var(--wine);
-  color: #fff;
+  background: #751d2a !important;
+  background-color: #751d2a !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   font-family: Prata, Georgia, serif;
   font-size: clamp(1.45rem, 3vw, 2.6rem);
   font-weight: 400;
   line-height: 1.22;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+}
+.results .ranking-heading h2 {
+  display: table;
+  max-width: 100%;
+  margin: 10px 0 18px;
+  padding: 10px 16px 12px;
+  background: #751d2a !important;
+  background-color: #751d2a !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  line-height: 1.16;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.results .ranking-heading {
+  margin-bottom: 22px;
+}
+.results .ranking-list li {
+  min-height: 48px;
+  padding: 7px 0;
+  line-height: 1.25;
+}
+.results .ranking-list {
+  padding: 0 24px;
+  border: 1px solid rgba(23, 21, 21, .16);
+  background: #fffaf2;
+}
+.results .ranking-list li:last-child {
+  border-bottom: 0;
+}
+.results .meaning-section > h2 {
+  font-family: Prata, Georgia, serif;
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: normal;
 }
 .combination-inner > p:not(.eyebrow),
 .combination-block p,
@@ -99,6 +150,27 @@
   outline-offset: 3px;
 }
 @media (max-width: 700px) {
+  .combination-inner > h1 {
+    padding: 10px 13px 12px;
+    font-size: clamp(2rem, 11vw, 3.25rem);
+    line-height: 1.12;
+  }
+  .results .ranking-heading h2 {
+    padding: 9px 13px 10px;
+    font-size: clamp(1.75rem, 9vw, 2.45rem);
+    line-height: 1.18;
+  }
+  .results .ranking-heading {
+    margin-bottom: 18px;
+  }
+  .results .ranking-list li {
+    min-height: 46px;
+    padding: 6px 0;
+  }
+  .results .ranking-list {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
   .combination-block { margin-top: 32px; }
   .combination-block h2 {
     padding: 9px 13px 10px;
