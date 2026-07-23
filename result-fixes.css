@@ -335,6 +335,53 @@
   }
 }
 
+/* v20: clear hierarchy and one shared left edge across the result copy. */
+.results .meaning-grid h3 {
+  display: block;
+  margin: 0 0 10px;
+  padding: 0;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #171515 !important;
+  -webkit-text-fill-color: #171515 !important;
+  font-family: Manrope, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.results .meaning-grid article > p {
+  margin-left: 18px;
+}
+
+.results .combination-inner > p:not(.eyebrow),
+.results .combination-block > p,
+.results .combination-block > ul {
+  margin-left: 18px;
+}
+
+.results .combination-inner > h1,
+.results .combination-block > h2,
+.results .meaning-section > h2,
+.results .ranking-heading > h2 {
+  margin-left: 0;
+}
+
+@media (max-width: 700px) {
+  .results .meaning-grid h3 {
+    padding: 0;
+    font-size: .98rem;
+    line-height: 1.42;
+  }
+
+  .results .meaning-grid article > p,
+  .results .combination-inner > p:not(.eyebrow),
+  .results .combination-block > p,
+  .results .combination-block > ul {
+    margin-left: 14px;
+  }
+}
+
 /* One reading rhythm for the whole result page. */
 .results .ranking-section,
 .results .meaning-section,
