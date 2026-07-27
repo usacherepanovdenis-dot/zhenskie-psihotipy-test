@@ -7,6 +7,66 @@ const SPEC={
 "outsider__hyper":["Какая свобода для тебя важнее?","Свобода думать по-своему и не быть как все.","Свобода двигаться, менять планы и получать новые впечатления."],"outsider__fairy":["Что для тебя важнее сохранить?","Верность себе, даже если возникнет дистанция с людьми.","Тёплую связь с близкими, даже если придётся немного подстроиться."],"outsider__turtle":["Что для тебя важнее?","Жить в соответствии со своей логикой, независимо от чужих ожиданий.","Жить спокойно, предсказуемо и без лишнего риска."],"outsider__martyr":["Что для тебя важнее в глубине души?","Сохранить внутреннюю независимость и право не жить по чужим ожиданиям.","Выполнить долг и остаться человеком, на которого можно положиться."],
 "hyper__fairy":["Что быстрее возвращает тебе ощущение настоящей жизни?","Движение, новые возможности и свобода делать интересное.","Тёплое общение, близость и люди, с которыми можно быть собой."],"hyper__turtle":["Какое состояние для тебя важнее?","Идти в новое и не знать заранее, куда приведёт следующий поворот.","Понимать последствия и не подвергать себя лишнему риску."],"hyper__martyr":["Если невозможно совместить оба варианта, что для тебя важнее?","Сохранить свободу и изменить то, что перестало приносить радость.","Остаться и выполнить обязательства, даже если это тяжело."],"fairy__turtle":["Что для тебя важнее в отношениях с людьми?","Сохранить близость и честно показать своё отношение.","Сохранить спокойствие и не открываться там, где есть риск отвержения."],"fairy__martyr":["Когда ты помогаешь близкому человеку, что для тебя важнее?","Чтобы между вами было тепло и хорошо было не только ему, но и тебе.","Сделать всё необходимое, даже если самой придётся потерпеть."],"turtle__martyr":["Что для тебя важнее в тяжёлой ситуации?","Сберечь себя и не брать последствий, с которыми трудно справиться.","Выдержать нагрузку и сделать то, что от тебя зависит."]};
 const ORDER=data.profiles.map(p=>p.id);let tieState=null,resolvedRanking=null;const oldSave=save;
+const RESULTS_API="https://functions.yandexcloud.net/d4e4n1mpvericsetepr1";
+const API_TYPE_IDS={
+  drama:"drama_queen",
+  iron:"iron_lady",
+  great:"great_woman",
+  outsider:"white_crow",
+  hyper:"hyperactive",
+  fairy:"kind_fairy",
+  turtle:"turtle",
+  martyr:"martyr"
+};
+const SUBMISSION_STORAGE_KEY=STORAGE_KEY+"_submission";
+let submissionInProgress=false;
+function buildSubmission(ranking){
+  const scores={};
+  ranking.forEach(item=>{scores[API_TYPE_IDS[item.profile.id]]=item.score});
+  return {
+    name:participant.name,
+    phone:participant.phone,
+    email:participant.email,
+    answers:choices.map((choice,index)=>({
+      questionId:data.questions[index].id,
+      primary:{
+        answerIndex:choice.primary,
+        letter:data.questions[index].answers[choice.primary].letter,
+        psychotype:API_TYPE_IDS[data.questions[index].answers[choice.primary].type]
+      },
+      secondary:{
+        answerIndex:choice.secondary,
+        letter:data.questions[index].answers[choice.secondary].letter,
+        psychotype:API_TYPE_IDS[data.questions[index].answers[choice.secondary].type]
+      }
+    })),
+    scores,
+    firstPsychotype:API_TYPE_IDS[ranking[0].profile.id],
+    secondPsychotype:API_TYPE_IDS[ranking[1].profile.id],
+    personalDataConsent:participant.personalConsent,
+    advertisingConsent:participant.mailingConsent,
+    pageUrl:location.href
+  };
+}
+async function submitResult(ranking){
+  if(submissionInProgress||localStorage.getItem(SUBMISSION_STORAGE_KEY))return;
+  submissionInProgress=true;
+  try{
+    const response=await fetch(RESULTS_API,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(buildSubmission(ranking)),
+      keepalive:true
+    });
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||!result.ok)throw new Error(result.error||"Submission failed");
+    localStorage.setItem(SUBMISSION_STORAGE_KEY,result.submissionId||"saved");
+  }catch(error){
+    console.error("Не удалось сохранить результат теста:",error);
+  }finally{
+    submissionInProgress=false;
+  }
+}
 save=function(){oldSave();try{localStorage.setItem(STORAGE_KEY+"_tie",JSON.stringify({tieState,ids:resolvedRanking&&resolvedRanking.map(x=>x.profile.id)}))}catch{}};
 function base(){let s=Object.fromEntries(ORDER.map(x=>[x,0])),p=Object.fromEntries(ORDER.map(x=>[x,0]));data.questions.forEach((q,i)=>{let c=choices[i],a=q.answers[c.primary],b=q.answers[c.secondary];s[a.type]+=2;p[a.type]++;s[b.type]++});return data.profiles.map(profile=>({profile,score:s[profile.id],primary:p[profile.id]})).sort((a,b)=>b.score-a.score||ORDER.indexOf(a.profile.id)-ORDER.indexOf(b.profile.id))}
 function conflict(r){let a=r.filter(x=>x.score===r[0].score);if(a.length>1)return{fixed:[],group:a,slots:2};let b=r.filter(x=>x.score===r[1].score);return b.length>1?{fixed:[r[0]],group:b,slots:1}:null}
@@ -25,6 +85,7 @@ function formatted(value){
 function combo(r){let open=false;return `<section class="combination-section"><div class="combination-inner"><p class="eyebrow">Твоя персональная интерпретация</p><h1>${esc(r.title)}</h1>${r.blocks.map(b=>{if(b.type==="h2"||b.type==="h3"){let x=(open?"</section>":"")+`<section class="combination-block"><h2>${formatted(b.text)}</h2>`;open=true;return x}if(b.type==="p")return `<p>${formatted(b.text)}</p>`;if(b.type==="list")return `<ul>${b.items.map(x=>`<li>${formatted(x)}</li>`).join("")}</ul>`;if(b.type==="table")return `<div class="responsive-table combination-recommendations"><table>${b.rows.map((row,i)=>`<tr>${row.map(c=>i?`<td>${formatted(c)}</td>`:`<th>${formatted(c)}</th>`).join("")}</tr>`).join("")}</table></div>`;return""}).join("")}${open?"</section>":""}</div></section>`}
 renderResults=function(){
   let rnk=resolvedRanking||base(),a=rnk[0],b=rnk[1],r=PERSONAL_RESULTS[a.profile.id+"__"+b.profile.id];
+  submitResult(rnk);
   app.className="results";
   app.innerHTML=`${rankingTable(rnk)}${meaningBlock()}${combo(r)}<section class="email-result-card"><p class="eyebrow">Результаты готовы</p><h2>Мы отправили результаты твоего теста на почту</h2><p>В письме — твои индивидуальные результаты и подарок: файл с описанием каждого психотипа. Проверь почту и папку «Спам».</p><p>Если письмо не пришло, напиши адрес ещё раз и нажми «Отправить».</p><form class="resend-form" novalidate><label for="result-email">Электронная почта</label><div class="resend-row"><input id="result-email" name="email" type="email" autocomplete="email" inputmode="email" value="${esc(participant.email)}" required><button class="button primary" type="submit">Отправить</button></div><p class="resend-status" aria-live="polite"></p></form><p class="technical-help">Если возникли технические неполадки, обратитесь на почту: <a href="mailto:usacherepanovdenis@gmail.com">usacherepanovdenis@gmail.com</a></p></section><footer><p>${esc(data.disclaimer)}</p><button class="button secondary" data-action="restart">Пройти тест заново</button></footer>`;
   const resendForm=document.querySelector(".resend-form");
@@ -46,6 +107,7 @@ renderResults=function(){
     if(confirm("Начать тест заново? Текущий результат будет сброшен.")){
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(STORAGE_KEY+"_tie");
+      localStorage.removeItem(SUBMISSION_STORAGE_KEY);
       participant={name:"",phone:"",email:"",personalConsent:false,mailingConsent:false};
       tieState=null;
       resolvedRanking=null;
