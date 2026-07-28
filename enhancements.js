@@ -89,10 +89,11 @@ renderResults=function(){
   app.className="results";
   app.innerHTML=`${rankingTable(rnk)}${meaningBlock()}${combo(r)}<section class="email-result-card"><p class="eyebrow">Результаты готовы</p><h2>Мы отправили результаты твоего теста на почту</h2><p>В письме — твои индивидуальные результаты и подарок: файл с описанием каждого психотипа. Проверь почту и папку «Спам».</p><p>Если письмо не пришло, напиши адрес ещё раз и нажми «Отправить».</p><form class="resend-form" novalidate><label for="result-email">Электронная почта</label><div class="resend-row"><input id="result-email" name="email" type="email" autocomplete="email" inputmode="email" value="${esc(participant.email)}" required><button class="button primary" type="submit">Отправить</button></div><p class="resend-status" aria-live="polite"></p></form><p class="technical-help">Если возникли технические неполадки, обратитесь на почту: <a href="mailto:usacherepanovdenis@gmail.com">usacherepanovdenis@gmail.com</a></p></section><footer><p>${esc(data.disclaimer)}</p><button class="button secondary" data-action="restart">Пройти тест заново</button></footer>`;
   const resendForm=document.querySelector(".resend-form");
-  resendForm.addEventListener("submit",event=>{
+  resendForm.addEventListener("submit",async event=>{
     event.preventDefault();
     const email=String(new FormData(resendForm).get("email")||"").trim();
     const status=resendForm.querySelector(".resend-status");
+    const button=resendForm.querySelector('button[type="submit"]');
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
       status.textContent="Проверь адрес электронной почты.";
       status.className="resend-status is-error";
@@ -100,8 +101,31 @@ renderResults=function(){
     }
     participant.email=email;
     save();
-    status.textContent="Адрес сохранён. Отправка заработает после подключения почтового сервиса.";
-    status.className="resend-status is-success";
+    button.disabled=true;
+    button.textContent="Отправляем…";
+    status.textContent="Отправляем результаты на указанную почту…";
+    status.className="resend-status";
+    try{
+      const response=await fetch(RESULTS_API,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(buildSubmission(rnk))
+      });
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok||!result.ok||result.emailSent===false){
+        throw new Error(result.error||"Email was not sent");
+      }
+      localStorage.setItem(SUBMISSION_STORAGE_KEY,result.submissionId||"saved");
+      status.textContent="Готово! Результаты повторно отправлены. Проверь почту и папку «Спам».";
+      status.className="resend-status is-success";
+    }catch(error){
+      console.error("Не удалось повторно отправить результаты:",error);
+      status.textContent="Не удалось отправить письмо. Проверь адрес и попробуй ещё раз.";
+      status.className="resend-status is-error";
+    }finally{
+      button.disabled=false;
+      button.textContent="Отправить";
+    }
   });
   bindAction("restart",()=>{
     if(confirm("Начать тест заново? Текущий результат будет сброшен.")){
